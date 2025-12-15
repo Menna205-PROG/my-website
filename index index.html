@@ -1,0 +1,42 @@
+   // Initialize Three.js scene
+   const scene = new THREE.Scene();
+   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 400, 0.1, 1000);
+   const renderer = new THREE.WebGLRenderer();
+   renderer.setSize(window.innerWidth, 400);
+   document.getElementById('3d-container').appendChild(renderer.domElement);
+
+   // Add lighting
+   const light = new THREE.AmbientLight(0xffffff, 0.5);
+   scene.add(light);
+   const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+   directionalLight.position.set(0, 1, 0);
+   scene.add(directionalLight);
+
+   // Load 3D model (e.g., a watch)
+   const loader = new THREE.GLTFLoader();
+   loader.load('path/to/watch.gltf', function(gltf) {
+       const model = gltf.scene;
+       scene.add(model);
+       model.position.set(0, 0, 0);
+       model.scale.set(1, 1, 1);
+   }, undefined, function(error) {
+       console.error(error);
+   });
+
+   camera.position.z = 5;
+
+   // Animation loop
+   function animate() {
+       requestAnimationFrame(animate);
+       scene.rotation.y += 0.01; // Rotate the scene
+       renderer.render(scene, camera);
+   }
+   animate();
+
+   // Handle window resize
+   window.addEventListener('resize', () => {
+       camera.aspect = window.innerWidth / 400;
+       camera.updateProjectionMatrix();
+       renderer.setSize(window.innerWidth, 400);
+   });
+   
